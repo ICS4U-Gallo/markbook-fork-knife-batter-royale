@@ -1,6 +1,6 @@
 For teachers to store mark realated info about their students.
 
-<<<<<<< HEAD
+
 =======
 # User stories
 - Add/remove/edit students to/from a roster
@@ -17,4 +17,4 @@ For teachers to store mark realated info about their students.
 - Report card comments
 
 # Product Backlog
->>>>>>> d8b4fc54944ce2360610df155c2e0bb2bf56bb69
+
