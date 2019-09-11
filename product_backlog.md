@@ -1,7 +1,7 @@
 For teachers to store mark realated info about their students.
 
 # User stories
--Add/remove/edit students to/from a roster
+-Add/remove/edit students to/from a roster 
 -Add/edit/remove assignments
 -Grades by % or level
 -Add/edit/remove marks per student for assignments
