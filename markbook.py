@@ -40,6 +40,16 @@ all_students = [student("a", "a", 1, "M", 1, "a"),
 all_courses = [course("comp sci", "ICS4U", 2, "Gallo", all_students)]
 
 
+def edit_menu():
+    print("edit")
+    while True:
+        input_ = input()
+        if input_ == "a":
+            create_student()
+        if input_ == "b":
+            remove_student(input("stu_num"))
+
+
 def create_student():
     print("Creating new student")
     first_name = input("first name: ")
@@ -50,6 +60,12 @@ def create_student():
     email = input("email: ")
     new_student = student(first_name, last_name, age, gender, stu_num, email)
     all_students.append(new_student)
+
+
+def remove_student(stu_num):
+    for stu in all_students:
+        if stu.stu_num == stu_num:
+            del stu
 
 
 def print_all_student():
@@ -88,10 +104,10 @@ def main():
     global all_students, all_courses
     while True:
         input_ = input()
-        if input_ == " ":
+        if input_ == "a":
             print_menu()
-        elif input_ == "a":
-            create_student()
+        elif input_ == "b":
+            edit_menu()
         elif input_ == "s":
             with open("markbooksave", "wb") as output:
                 pickle.dump(all_students, output, pickle.HIGHEST_PROTOCOL)
