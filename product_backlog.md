@@ -17,7 +17,6 @@ For teachers to store mark realated info about their students.
 - Report card comments
 
 # Product Backlog
-<<<<<<< HEAD
 =======
 - Set up env
 - Figure out data representation
@@ -50,4 +49,4 @@ For teachers to store mark realated info about their students.
     - Create Student List
 - Create Assignment
 - Create Assignment List 
->>>>>>> d3a2602f26ca21eacbdb573bb9744a309d9a3488
+
