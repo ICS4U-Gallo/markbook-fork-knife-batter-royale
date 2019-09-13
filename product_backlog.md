@@ -1,7 +1,10 @@
 For teachers to store mark realated info about their students.
 
+<<<<<<< HEAD
 
 =======
+=======
+>>>>>>> fb038ff6e539b4532b5f358e9f961385fb9284e6
 # User stories
 - Add/remove/edit students to/from a roster
 - Add/edit/remove assignments
@@ -17,6 +20,7 @@ For teachers to store mark realated info about their students.
 - Report card comments
 
 # Product Backlog
+<<<<<<< HEAD
 =======
 - Set up env
 - Figure out data representation
@@ -50,3 +54,57 @@ For teachers to store mark realated info about their students.
 - Create Assignment
 - Create Assignment List 
 
+=======
+- Set up env
+- Figure out data representation
+    - Students
+        - first_name: str
+        - last_name: str
+        - Gender
+        - image
+        - student number
+        - grade: int
+        - email
+        - marks: List[float]
+        - Comments
+    - Class
+        - course code
+        - course name
+        - period
+        - teacher name
+        - student list
+        - assignments list
+    - Assignments
+        - Due
+        - name
+        - points
+- Create list of marks
+- write object data to file
+- Create interface
+- create class
+- create student dict/class
+- create class
+    - create student list
+- create assignment
+- create assignment list
+
+
+- Figure out what data goes where
+  - Classes?
+  - **Dictionaries**?
+  - **Lists**?
+- Create student list
+- Create Assignment List
+- Mark lists
+- Create student mark report
+- Create assignment mark report
+- **Read/write to file**
+  - JSON
+  - Assignments
+  - Students
+- Add report card comments
+- create menu system
+
+- **add student**
+- **remove student**
+>>>>>>> fb038ff6e539b4532b5f358e9f961385fb9284e6
