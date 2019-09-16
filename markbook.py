@@ -27,6 +27,9 @@ class student:
         self.email = email
 
 
+class assignment:
+    pass
+
 all_students = [student("a", "a", 1, "M", 1, "a"),
                 student("b", "b", 2, "F", 2, "b"),
                 student("c", "c", 3, "M", 3, "c"),
@@ -102,6 +105,9 @@ def print_menu():
 
 def main():
     global all_students, all_courses
+    with open("markbooksave", "rb") as input_:
+                all_students = pickle.load(input_)
+                all_courses = pickle.load(input_)
     while True:
         input_ = input()
         if input_ == "a":
@@ -112,13 +118,11 @@ def main():
             with open("markbooksave", "wb") as output:
                 pickle.dump(all_students, output, pickle.HIGHEST_PROTOCOL)
                 pickle.dump(all_courses, output, pickle.HIGHEST_PROTOCOL)
-        elif input_ == "l":
-            with open("markbooksave", "rb") as input_:
-                all_students = pickle.load(input_)
-                all_courses = pickle.load(input_)
+
 
 if __name__ == "__main__":
     main()
+
 from typing import Dict
 
 
