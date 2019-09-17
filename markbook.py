@@ -12,9 +12,16 @@ class course:
         self.period = period
         self.teacher = teacher
         self.students_list = students
+        self.assignment = []
 
     def add_student(self, new_student):
         self.students_list.append(new_student)
+
+    def add_assignment(self):
+        ass_name = input("name: ")
+        ass_due = input("due: ")
+        ass_point = input("point: ")
+        self.assignment.append(assignment(ass_name, ass_due, ass_point))
 
 
 class student:
@@ -28,28 +35,42 @@ class student:
 
 
 class assignment:
-    pass
-
-all_students = [student("a", "a", 1, "M", 1, "a"),
-                student("b", "b", 2, "F", 2, "b"),
-                student("c", "c", 3, "M", 3, "c"),
-                student("d", "d", 4, "F", 4, "d"),
-                student("e", "e", 5, "M", 5, "e"),
-                student("f", "f", 6, "F", 6, "f"),
-                student("g", "g", 7, "M", 7, "g"),
-                student("h", "h", 8, "F", 8, "h"),
-                ]
-
-all_courses = [course("comp sci", "ICS4U", 2, "Gallo", all_students)]
+    def __init__(self, name, due, point):
+        self.name = name
+        self.due = due
+        self.point = point
 
 
-def edit_menu():
-    print("edit")
+def course_menu():
+    print("course")
     while True:
         input_ = input()
-        if input_ == "a":
+        if input_ == "":
+            break
+        elif input_ == "a":
+            edit_course(input("code: ").upper())
+
+
+def edit_course(code):
+    for cou in all_courses:
+        if cou.code == code:
+            while True:
+                input_ = input()
+                if input_ == "":
+                    break
+                elif input_ == "a":
+                    cou.add_assignment()
+
+
+def student_menu():
+    print("student")
+    while True:
+        input_ = input()
+        if input_ == "":
+            break
+        elif input_ == "a":
             create_student()
-        if input_ == "b":
+        elif input_ == "b":
             remove_student(input("stu_num"))
 
 
@@ -100,7 +121,7 @@ def print_menu():
         elif input_ == "b":
             print_all_course()
         elif input_ == "c":
-            print_course(input("code"))
+            print_course(input("code").upper())
     
 
 def main():
@@ -113,7 +134,9 @@ def main():
         if input_ == "a":
             print_menu()
         elif input_ == "b":
-            edit_menu()
+            student_menu()
+        elif input_ == "c":
+            course_menu()
         elif input_ == "s":
             with open("markbooksave", "wb") as output:
                 pickle.dump(all_students, output, pickle.HIGHEST_PROTOCOL)
