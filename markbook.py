@@ -5,23 +5,25 @@ Group members:
 import pickle
 
 
+
 class course:
-    def __init__(self, name, code, period, teacher, students):
+    def __init__(self, name, code, period, teacher):
         self.name = name
         self.code = code
         self.period = period
         self.teacher = teacher
-        self.students_list = students
-        self.assignment = []
+        self.students_list = []
+        self.assignment_list = []
 
     def add_student(self, new_student):
         self.students_list.append(new_student)
+        new_student.add_course(self)
 
     def add_assignment(self):
         ass_name = input("name: ")
         ass_due = input("due: ")
         ass_point = input("point: ")
-        self.assignment.append(assignment(ass_name, ass_due, ass_point))
+        self.assignment_list.append(assignment(ass_name, ass_due, ass_point))
 
 
 class student:
@@ -32,6 +34,11 @@ class student:
         self.gender = gender
         self.stu_num = stu_num
         self.email = email
+        self.course_list = []
+
+    def add_course(self, new_course):
+        self.course_list.append(new_course)
+        new_course.students_list.append(self)
 
 
 class assignment:
@@ -72,6 +79,13 @@ def student_menu():
             create_student()
         elif input_ == "b":
             remove_student(input("stu_num"))
+        elif input_ == "c":
+            print_all_student()
+        elif input_ == "d":
+            print_student(int(input("student number: ")))
+
+
+def edit_student(num):
 
 
 def create_student():
@@ -96,6 +110,13 @@ def print_all_student():
     for stu in all_students:
         print(stu.first, stu.last, stu.stu_num)
 
+
+def print_student(num):
+    for stu in all_students:
+        if stu.stu_num == num:
+            print(stu.first, stu.last, stu.stu_num)
+            for course in stu.course:
+                print(course.name)
 
 def print_all_course():
     for cou in all_courses:
@@ -122,13 +143,25 @@ def print_menu():
             print_all_course()
         elif input_ == "c":
             print_course(input("code").upper())
-    
+
+all_students = [student("a", "a", 1, "M", 1, "a"),
+                student("b", "b", 2, "F", 2, "b"),
+                student("c", "c", 3, "M", 3, "c"),
+                student("d", "d", 4, "F", 4, "d"),
+                student("e", "e", 5, "M", 5, "e"),
+                student("f", "f", 6, "F", 6, "f"),
+                student("g", "g", 7, "M", 7, "g"),
+                student("h", "h", 8, "F", 8, "h"),
+                ]
+all_courses = [course("comp sci", "ICS4U", 2, "Gallo", all_students)]    
 
 def main():
     global all_students, all_courses
+    """
     with open("markbooksave", "rb") as input_:
                 all_students = pickle.load(input_)
                 all_courses = pickle.load(input_)
+    """
     while True:
         input_ = input()
         if input_ == "a":
