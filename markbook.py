@@ -5,7 +5,6 @@ Group members:
 import pickle
 
 
-
 class course:
     def __init__(self, name, code, period, teacher):
         self.name = name
@@ -27,13 +26,10 @@ class course:
 
 
 class student:
-    def __init__(self, first_name, last_name, age, gender, stu_num, email):
+    def __init__(self, first_name, last_name, stu_num):
         self.first = first_name
         self.last = last_name
-        self.age = age
-        self.gender = gender
         self.stu_num = stu_num
-        self.email = email
         self.course_list = []
 
     def add_course(self, new_course):
@@ -49,61 +45,84 @@ class assignment:
 
 
 def course_menu():
-    print("course")
     while True:
+        print("Input nothing to go back\nInput 'a' to create a new course\nInput 'b' to edit existing courses\n"
+              "Input 'c' to print all courses\nInput 'd' to print a course in detail")
         input_ = input()
         if input_ == "":
             break
         elif input_ == "a":
-            edit_course(input("code: ").upper())
+            pass
+        elif input_ == "b":
+            edit_course(find_course(input("code: ").upper()))
+        elif input_ == "c":
+            print_all_course()
+        elif input_ == "d":
+            print_course(find_course(input("code: ").upper()))
 
 
-def edit_course(code):
-    for cou in all_courses:
-        if cou.code == code:
-            while True:
-                input_ = input()
-                if input_ == "":
-                    break
-                elif input_ == "a":
-                    cou.add_assignment()
+def find_course(code):
+    for course in all_courses:
+        if course.code == code:
+            return course
+
+
+def edit_course(course):
+    while True:
+        print("Input nothing to go back\nInput 'a' to add assignment")
+        input_ = input()
+        if input_ == "":
+            break
+        elif input_ == "a":
+            course.add_assignment()
 
 
 def student_menu():
-    print("student")
     while True:
+        print("Input nothing to go back\nInput 'a' to add a student\nInput 'b' to remove students\nInput 'c' to show the student list\n"
+              "Input 'd' to show a student detail\nInput 'e' to edit a student")
         input_ = input()
         if input_ == "":
             break
         elif input_ == "a":
             create_student()
         elif input_ == "b":
-            remove_student(input("stu_num"))
+            remove_student(find_student(int(input("student number: "))))
         elif input_ == "c":
             print_all_student()
         elif input_ == "d":
-            print_student(int(input("student number: ")))
+            print_student(find_student(int(input("student number: "))))
+        elif input_ == "e":
+            edit_student(find_student(int(input("student number: "))))
 
 
-def edit_student(num):
+def find_student(num):
+    for stu in all_students:
+        if stu.stu_num == num:
+            return stu
+
+
+def edit_student(stu):
+    while True:
+        print("Input nothing to go back \nInput 'a' to add course")
+        input_ = input()
+        if input_ == "":
+            break
+        elif input_ == "a":
+            stu.add_course(find_course(input("code: ").upper()))
 
 
 def create_student():
     print("Creating new student")
     first_name = input("first name: ")
     last_name = input("last name: ")
-    age = int(input("age: "))
-    gender = input("gender: ")
     stu_num = int(input("student number: "))
-    email = input("email: ")
-    new_student = student(first_name, last_name, age, gender, stu_num, email)
+    new_student = student(first_name, last_name, stu_num)
     all_students.append(new_student)
 
 
-def remove_student(stu_num):
-    for stu in all_students:
-        if stu.stu_num == stu_num:
-            del stu
+def remove_student(stu):
+    del stu
 
 
 def print_all_student():
@@ -111,49 +130,38 @@ def print_all_student():
         print(stu.first, stu.last, stu.stu_num)
 
 
-def print_student(num):
-    for stu in all_students:
-        if stu.stu_num == num:
-            print(stu.first, stu.last, stu.stu_num)
-            for course in stu.course:
-                print(course.name)
+def print_student(stu):    
+    print(stu.first, stu.last, stu.stu_num)
+    for course in stu.course_list:
+        print(course.name)
+
 
 def print_all_course():
     for cou in all_courses:
         print(cou.name, cou.code, len(cou.students_list))
 
 
-def print_course(code):
-    for cou in all_courses:
-        if cou.code == code:
-            print(cou.name, cou.code, cou.period, cou.teacher)
-            for stu in cou.students_list:
-                print(stu.first, stu.last, stu.stu_num)
+def print_course(course):
+    print(course.name, course.code, course.period, course.teacher)
+    for stu in course.students_list:
+        print(stu.first, stu.last, stu.stu_num)
 
 
 def print_menu():
-    print("print")
-    while True:
-        input_ = input("")
-        if input_ == "":
-            break
-        elif input_ == "a":
-            print_all_student()
-        elif input_ == "b":
-            print_all_course()
-        elif input_ == "c":
-            print_course(input("code").upper())
+    print("Input 'a' to manage students\nInput 'b' to manage courses\nInput 's'"
+          "to save changes")
 
-all_students = [student("a", "a", 1, "M", 1, "a"),
-                student("b", "b", 2, "F", 2, "b"),
-                student("c", "c", 3, "M", 3, "c"),
-                student("d", "d", 4, "F", 4, "d"),
-                student("e", "e", 5, "M", 5, "e"),
-                student("f", "f", 6, "F", 6, "f"),
-                student("g", "g", 7, "M", 7, "g"),
-                student("h", "h", 8, "F", 8, "h"),
+all_students = [student("a", "a", 1),
+                student("b", "b", 2),
+                student("c", "c", 3),
+                student("d", "d", 4),
+                student("e", "e", 5),
+                student("f", "f", 6),
+                student("g", "g", 7),
+                student("h", "h", 8),
                 ]
-all_courses = [course("comp sci", "ICS4U", 2, "Gallo", all_students)]    
+all_courses = [course("comp sci", "ICS4U", 2, "Gallo")]
+
 
 def main():
     global all_students, all_courses
@@ -163,12 +171,11 @@ def main():
                 all_courses = pickle.load(input_)
     """
     while True:
+        print_menu()
         input_ = input()
         if input_ == "a":
-            print_menu()
-        elif input_ == "b":
             student_menu()
-        elif input_ == "c":
+        elif input_ == "b":
             course_menu()
         elif input_ == "s":
             with open("markbooksave", "wb") as output:
