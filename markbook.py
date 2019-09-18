@@ -42,7 +42,7 @@ class assignment:
 
 
 def course_menu():
-    print("course")
+    print("Input 'a' to create a new course\nInput 'b' to edit existing courses\nInput nothing to go back")
     while True:
         input_ = input()
         if input_ == "":
@@ -63,7 +63,7 @@ def edit_course(code):
 
 
 def student_menu():
-    print("student")
+    print("Input 'a' to add a student\nInput 'b' to remove students\nInput 'c' to show the student list\nInput nothing to go back")
     while True:
         input_ = input()
         if input_ == "":
@@ -72,6 +72,8 @@ def student_menu():
             create_student()
         elif input_ == "b":
             remove_student(input("stu_num"))
+        elif input_ == "c":
+            print_all_student()
 
 
 def create_student():
@@ -111,18 +113,9 @@ def print_course(code):
 
 
 def print_menu():
-    print("print")
-    while True:
-        input_ = input("")
-        if input_ == "":
-            break
-        elif input_ == "a":
-            print_all_student()
-        elif input_ == "b":
-            print_all_course()
-        elif input_ == "c":
-            print_course(input("code").upper())
-    
+    print("Input 'a' to manage students\nInput 'b' to manage courses\nInput 's'"
+          "to save changes")
+
 
 def main():
     global all_students, all_courses
@@ -130,12 +123,11 @@ def main():
                 all_students = pickle.load(input_)
                 all_courses = pickle.load(input_)
     while True:
+        print_menu()
         input_ = input()
         if input_ == "a":
-            print_menu()
-        elif input_ == "b":
             student_menu()
-        elif input_ == "c":
+        elif input_ == "b":
             course_menu()
         elif input_ == "s":
             with open("markbooksave", "wb") as output:
