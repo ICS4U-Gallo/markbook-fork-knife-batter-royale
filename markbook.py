@@ -15,8 +15,22 @@ class course:
         self.assignment_list = []
 
     def add_student(self, new_student):
-        self.students_list.append(new_student)
-        new_student.add_course(self)
+        if isinstance(new_student, student):
+            if new_student not in self.students_list:
+                self.students_list.append(new_student)
+                new_student.course_list.append(self)
+
+    def edit_assignement(self, ass_name):
+        for assignment in self.assignment_list:
+            if assignment.name == ass_name:
+                while True:
+                    input_ = input()
+                    if input_ == "":
+                        break
+                    elif input_ == "a":
+                        assignment.mark_stu()
+                    elif input_ == "b":
+                        assignment.print_mark()
 
     def add_assignment(self):
         ass_name = input("name: ")
@@ -33,15 +47,26 @@ class student:
         self.course_list = []
 
     def add_course(self, new_course):
-        self.course_list.append(new_course)
-        new_course.students_list.append(self)
+        if new_course not in self.course_list:
+            self.course_list.append(new_course)
+            new_course.students_list.append(self)
 
 
 class assignment:
     def __init__(self, name, due, point):
-        self.name = name
+        self.name = name.capitalize()
         self.due = due
         self.point = point
+        self.marks = {}
+
+    def mark_stu(self):
+        stu = find_student(int(input("student number: ")))
+        marks = int(input("marks: "))
+        self.marks[stu] = marks
+
+    def print_mark(self):
+        for stu in self.marks:
+            print(stu.first, stu.last, stu.stu_num, self.marks[stu])
 
 
 def course_menu():
@@ -75,6 +100,11 @@ def edit_course(course):
             break
         elif input_ == "a":
             course.add_assignment()
+        elif input_ == "b":
+            course.add_student(find_student(int(input("student_num: "))))
+        elif input_ == "c":
+            course.edit_assignement(input("assignment name: ").capitalize())
+
 
 
 def student_menu():
@@ -148,28 +178,15 @@ def print_course(course):
 
 
 def print_menu():
-    print("Input 'a' to manage students\nInput 'b' to manage courses\nInput 's'"
-          "to save changes")
-
-all_students = [student("a", "a", 1),
-                student("b", "b", 2),
-                student("c", "c", 3),
-                student("d", "d", 4),
-                student("e", "e", 5),
-                student("f", "f", 6),
-                student("g", "g", 7),
-                student("h", "h", 8),
-                ]
-all_courses = [course("comp sci", "ICS4U", 2, "Gallo")]
+    print("Input 'a' to manage students\nInput 'b' to manage courses\n"
+          "Input 's' to save and exit")
 
 
 def main():
     global all_students, all_courses
-    """
     with open("markbooksave", "rb") as input_:
                 all_students = pickle.load(input_)
                 all_courses = pickle.load(input_)
-    """
     while True:
         print_menu()
         input_ = input()
@@ -181,6 +198,7 @@ def main():
             with open("markbooksave", "wb") as output:
                 pickle.dump(all_students, output, pickle.HIGHEST_PROTOCOL)
                 pickle.dump(all_courses, output, pickle.HIGHEST_PROTOCOL)
+            break
 
 
 if __name__ == "__main__":
