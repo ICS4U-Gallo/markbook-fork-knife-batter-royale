@@ -1,8 +1,11 @@
 """
 Markbook Application
-Group members:
+Group members: Aidan, Ryan, Henson, Eric 
 """
 import pickle
+
+all_courses = []
+all_students = []
 
 
 class course:
@@ -16,9 +19,15 @@ class course:
 
     def add_student(self, new_student):
         if isinstance(new_student, student):
-            if new_student not in self.students_list:
-                self.students_list.append(new_student)
-                new_student.course_list.append(self)
+            if new_student.stu_num not in self.students_list:
+                self.students_list.append(new_student.stu_num)
+                new_student.course_list.append(self.code)
+
+    def remove_student(self, stu):
+        if isinstance(stu, student):
+            if stu.stu_num in self.students_list:
+                self.students_list.remove(stu.stu_num)
+                stu.course_list.remove(self.code)
 
     def edit_assignement(self, ass_name):
         for assignment in self.assignment_list:
@@ -31,13 +40,17 @@ class course:
                         assignment.mark_stu()
                     elif input_ == "b":
                         assignment.print_mark()
+                    elif input_ == "c":
+                        print(assignment.average_mark())
 
     def add_assignment(self):
         ass_name = input("name: ")
         ass_due = input("due: ")
-        ass_point = input("point: ")
-        self.assignment_list.append(assignment(ass_name, ass_due, ass_point))
+        ass_point = int(input("point: "))
+        self.assignment_list.append(assignment(ass_name, ass_due, ass_point, self.code))
 
+    def class_average(self):
+        pass
 
 class student:
     def __init__(self, first_name, last_name, stu_num):
@@ -47,26 +60,47 @@ class student:
         self.course_list = []
 
     def add_course(self, new_course):
-        if new_course not in self.course_list:
-            self.course_list.append(new_course)
-            new_course.students_list.append(self)
+        if new_course.code not in self.course_list:
+            self.course_list.append(new_course.code)
+            new_course.students_list.append(self.stu_num)
+
+    def get_average(self, code):
+        mark = 0
+        point = 0
+        cou = find_course(code)
+        for ass in cou.assignment_list:
+            mark = ass.marks(self.stu_num)
+            point = ass.points
+        average = mark/point
+        return average
 
 
 class assignment:
-    def __init__(self, name, due, point):
+    def __init__(self, name, due, point, course):
         self.name = name.capitalize()
         self.due = due
         self.point = point
+        self.course = course
         self.marks = {}
 
     def mark_stu(self):
         stu = find_student(int(input("student number: ")))
-        marks = int(input("marks: "))
-        self.marks[stu] = marks
+        cou = find_course(self.course)
+        if stu.stu_num in cou.students_list:
+            marks = int(input("marks: "))
+            self.marks[stu.stu_num] = marks
 
     def print_mark(self):
-        for stu in self.marks:
-            print(stu.first, stu.last, stu.stu_num, self.marks[stu])
+        for stud in self.marks:
+            stu = find_student(stud)
+            print(stu.first, stu.last, stu.stu_num, self.marks[stud])
+
+    def average_mark(self):
+        total = 0
+        for mark in self.marks.values():
+            total += mark
+        average = ((total/len(self.marks))/self.point)*100
+        return average
 
 
 def course_menu():
@@ -77,7 +111,7 @@ def course_menu():
         if input_ == "":
             break
         elif input_ == "a":
-            pass
+            create_course()
         elif input_ == "b":
             edit_course(find_course(input("code: ").upper()))
         elif input_ == "c":
@@ -86,25 +120,37 @@ def course_menu():
             print_course(find_course(input("code: ").upper()))
 
 
+def create_course():
+    name = input("course name: ")
+    code = input("course code: ").upper()
+    period = input("period: ")
+    teacher = input("teacher: ")
+    cou = course(name, code, period, teacher)
+    all_courses.append(cou)
+
+
 def find_course(code):
-    for course in all_courses:
-        if course.code == code:
-            return course
+    for cou in all_courses:
+        if cou.code == code:
+            return cou
 
 
-def edit_course(course):
-    while True:
-        print("Input nothing to go back\nInput 'a' to add assignment")
-        input_ = input()
-        if input_ == "":
-            break
-        elif input_ == "a":
-            course.add_assignment()
-        elif input_ == "b":
-            course.add_student(find_student(int(input("student_num: "))))
-        elif input_ == "c":
-            course.edit_assignement(input("assignment name: ").capitalize())
-
+def edit_course(cou):
+    if cou in all_courses:
+        while True:
+            print("Input nothing to go back\nInput 'a' to add assignment \nInput 'b' to add student \n"
+                "Input 'c' to remove student \nInput 'd' to edit assignment")
+            input_ = input()
+            if input_ == "":
+                break
+            elif input_ == "a":
+                cou.add_assignment()
+            elif input_ == "b":
+                cou.add_student(find_student(int(input("student_num: "))))
+            elif input_ == "c":
+                cou.remove_student(find_student(int(input("student_num: "))))
+            elif input_ == "d":
+                cou.edit_assignement(input("assignment name: ").capitalize())
 
 
 def student_menu():
@@ -152,6 +198,7 @@ def create_student():
 
 
 def remove_student(stu):
+    all_students.remove(stu)
     del stu
 
 
@@ -163,7 +210,8 @@ def print_all_student():
 def print_student(stu):    
     print(stu.first, stu.last, stu.stu_num)
     for course in stu.course_list:
-        print(course.name)
+        cou = find_course(course)
+        print(cou.name)
 
 
 def print_all_course():
@@ -173,7 +221,8 @@ def print_all_course():
 
 def print_course(course):
     print(course.name, course.code, course.period, course.teacher)
-    for stu in course.students_list:
+    for stud in course.students_list:
+        stu = find_student(stud)
         print(stu.first, stu.last, stu.stu_num)
 
 
