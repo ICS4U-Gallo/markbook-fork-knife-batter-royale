@@ -1,6 +1,7 @@
 """
 Markbook Application
-Group members: Aidan, Ryan, Henson, Eric 
+Group members: Aidan, Ryan, Henson, Eric
+
 """
 import pickle
 from typing import dict
