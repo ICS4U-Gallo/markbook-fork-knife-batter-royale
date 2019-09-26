@@ -4,13 +4,12 @@ Group members: Aidan, Ryan, Henson, Eric
 
 """
 import pickle
-from typing import dict
 
 all_courses = []
 all_students = []
 
 
-class course:
+class course:  #class containing info related to the course
     def __init__(self, name, code, period, teacher):
         self.name = name
         self.code = code
@@ -49,13 +48,14 @@ class course:
         ass_name = input("name: ")
         ass_due = input("due: ")
         ass_point = int(input("point: "))
-        self.assignment_list.append(assignment(ass_name, ass_due, ass_point, self.code))
+        self.assignment_list.append(assignment(ass_name, ass_due, 
+                                    ass_point, self.code))
 
     def class_average(self):
         pass
 
 
-class student:
+class student:  #class containing info about the student
     def __init__(self, first_name, last_name, stu_num):
         self.first = first_name
         self.last = last_name
@@ -78,7 +78,7 @@ class student:
         return average
 
 
-class assignment:
+class assignment:  #class containing info about any assignments
     def __init__(self, name, due, point, course):
         self.name = name.capitalize()
         self.due = due
@@ -188,14 +188,14 @@ def edit_student(stu):
         if input_ == "":
             break
         elif input_ == "a":
-            stu.add_course(find_course(input("code: ").upper()))
+            stu.add_course(find_course(input("Code: ").upper()))
 
 
 def create_student():
     print("Creating new student")
-    first_name = input("first name: ")
-    last_name = input("last name: ")
-    stu_num = int(input("student number: "))
+    first_name = input("First Name: ")
+    last_name = input("Last Name: ")
+    stu_num = int(input("Student Number: "))
     new_student = student(first_name, last_name, stu_num)
     all_students.append(new_student)
 
