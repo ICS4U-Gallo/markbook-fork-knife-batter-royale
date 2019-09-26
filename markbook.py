@@ -1,6 +1,7 @@
 """
 Markbook Application
-Group members: Aidan, Ryan, Henson, Eric 
+Group members: Aidan, Ryan, Henson, Eric
+
 """
 import pickle
 import operator
@@ -9,7 +10,7 @@ all_courses = {}
 all_students = {}
 
 
-class course:
+class course:  #class containing info related to the course
     def __init__(self, name, code, period, teacher):
         self.name = name
         self.code = code
@@ -45,10 +46,11 @@ class course:
                         print(assignment.average_mark())
 
     def add_assignment(self):
-        ass_name = input("name: ")
-        ass_due = input("due: ")
-        ass_point = int(input("point: "))
-        self.assignment_list.append(assignment(ass_name, ass_due, ass_point, self.code))
+        ass_name = input("Name: ")
+        ass_due = input("Due: ")
+        ass_point = int(input("Points: "))
+        self.assignment_list.append(assignment(ass_name, ass_due, 
+                                    ass_point, self.code))
 
     def class_average(self):
         total = 0
@@ -58,7 +60,7 @@ class course:
         return average
 
 
-class student:
+class student:  #class containing info about the student
     def __init__(self, first_name, last_name, stu_num):
         self.first = first_name
         self.last = last_name
@@ -81,7 +83,7 @@ class student:
         return average
 
 
-class assignment:
+class assignment:  #class containing info about any assignments
     def __init__(self, name, due, point, course):
         self.name = name.capitalize()
         self.due = due
@@ -112,7 +114,7 @@ class assignment:
 def course_menu():
     while True:
         print("Input nothing to go back\nInput 'a' to create a new course\nInput 'b' to edit existing courses\n"
-              "Input 'c' to print all courses\nInput 'd' to print a course in detail")
+              "Input 'c' to print all courses\nInput 'd' to print course details")
         input_ = input()
         if input_ == "":
             break
@@ -156,7 +158,7 @@ def edit_course(cou):
 def student_menu():
     while True:
         print("Input nothing to go back\nInput 'a' to add a student\nInput 'b' to remove students\nInput 'c' to show the student list\n"
-              "Input 'd' to show a student detail\nInput 'e' to edit a student")
+              "Input 'd' to show student details\nInput 'e' to edit a student")
         input_ = input()
         if input_ == "":
             break
@@ -241,62 +243,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-'''
-from typing import Dict
-
-
-def create_assignment(name: str, due: str, points: int) -> Dict:
-    """Creates an assignment represented as a dictionary
-    
-    Args:
-        name: the name of the assignment.
-        due: the due date for the assignment.
-        points: what the assignment is out of (denominator).
-    Returns:
-        Assignment as a dictionary.
-    """
-    return {}
-
-
-def create_classroom(course_code: str, course_name: str, period: int, teacher: str) -> Dict:
-    """Creates a classroom dictionary"""
-    return {}
-
-
-def calculate_average_mark(student: Dict) -> float:
-    """Calculates the average mark of a student"""
-    return 0
-
-
-def add_student_to_classroom(student, classroom):
-    """Adds student to a classroom
-
-    Args:
-        student: Student dict
-        classroom: The classroom to add the student to
-    """
-    pass
-
-
-def remove_student_from_classroom(student: Dict, classroom: Dict):
-    """Removes student from classroom
-
-    Args:
-        student: The student to be removed
-        classroom: the class from which the student will be removed.
-    """
-    pass
-
-
-def edit_student(student: Dict, **kwargs: Dict):
-    """Edits the student's info with the provided key/value pairs
-
-    Args:
-        student: The student whose data needs to be udated.
-        **kwargs: KeyWordARGumentS. The key/value pairs of the
-            data that needs to be changed. Can come in the form
-            of a dictionary.
-    """
-    pass
-'''
