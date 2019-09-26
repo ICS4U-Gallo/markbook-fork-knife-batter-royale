@@ -3,9 +3,10 @@ Markbook Application
 Group members: Aidan, Ryan, Henson, Eric 
 """
 import pickle
+import operator
 
-all_courses = []
-all_students = []
+all_courses = {}
+all_students = {}
 
 
 class course:
@@ -50,7 +51,12 @@ class course:
         self.assignment_list.append(assignment(ass_name, ass_due, ass_point, self.code))
 
     def class_average(self):
-        pass
+        total = 0
+        for stu in self.students_list:
+            total += all_students[stu].get_average(self.code)
+        average = total/len(self.students_list)
+        return average
+
 
 class student:
     def __init__(self, first_name, last_name, stu_num):
@@ -67,10 +73,10 @@ class student:
     def get_average(self, code):
         mark = 0
         point = 0
-        cou = find_course(code)
+        cou = all_courses[code]
         for ass in cou.assignment_list:
-            mark = ass.marks(self.stu_num)
-            point = ass.points
+            mark += ass.marks[self.stu_num]
+            point += ass.point
         average = mark/point
         return average
 
@@ -84,16 +90,16 @@ class assignment:
         self.marks = {}
 
     def mark_stu(self):
-        stu = find_student(int(input("student number: ")))
-        cou = find_course(self.course)
+        stu = all_students[(int(input("student number: ")))]
+        cou = all_courses[self.course]
         if stu.stu_num in cou.students_list:
             marks = int(input("marks: "))
             self.marks[stu.stu_num] = marks
 
     def print_mark(self):
-        for stud in self.marks:
-            stu = find_student(stud)
-            print(stu.first, stu.last, stu.stu_num, self.marks[stud])
+        for num in self.marks:
+            stu = all_students[num]
+            print(stu.first, stu.last, stu.stu_num, self.marks[num])
 
     def average_mark(self):
         total = 0
@@ -113,11 +119,11 @@ def course_menu():
         elif input_ == "a":
             create_course()
         elif input_ == "b":
-            edit_course(find_course(input("code: ").upper()))
+            edit_course(all_courses[(input("code: ").upper())])
         elif input_ == "c":
             print_all_course()
         elif input_ == "d":
-            print_course(find_course(input("code: ").upper()))
+            print_course(all_courses[(input("code: ").upper())])
 
 
 def create_course():
@@ -125,32 +131,26 @@ def create_course():
     code = input("course code: ").upper()
     period = input("period: ")
     teacher = input("teacher: ")
-    cou = course(name, code, period, teacher)
-    all_courses.append(cou)
-
-
-def find_course(code):
-    for cou in all_courses:
-        if cou.code == code:
-            return cou
+    if code not in all_courses.keys():
+        cou = course(name, code, period, teacher)
+        all_courses[code] = cou
 
 
 def edit_course(cou):
-    if cou in all_courses:
-        while True:
-            print("Input nothing to go back\nInput 'a' to add assignment \nInput 'b' to add student \n"
-                "Input 'c' to remove student \nInput 'd' to edit assignment")
-            input_ = input()
-            if input_ == "":
-                break
-            elif input_ == "a":
-                cou.add_assignment()
-            elif input_ == "b":
-                cou.add_student(find_student(int(input("student_num: "))))
-            elif input_ == "c":
-                cou.remove_student(find_student(int(input("student_num: "))))
-            elif input_ == "d":
-                cou.edit_assignement(input("assignment name: ").capitalize())
+    while True:
+        print("Input nothing to go back\nInput 'a' to add assignment \nInput 'b' to add student \n"
+                  "Input 'c' to remove student \nInput 'd' to edit assignment")
+        input_ = input()
+        if input_ == "":
+            break
+        elif input_ == "a":
+            cou.add_assignment()
+        elif input_ == "b":
+            cou.add_student(all_students[(int(input("student_num: ")))])
+        elif input_ == "c":
+            cou.remove_student(all_students[(int(input("student_num: ")))])
+        elif input_ == "d":
+            cou.edit_assignement(input("assignment name: ").capitalize())
 
 
 def student_menu():
@@ -163,19 +163,13 @@ def student_menu():
         elif input_ == "a":
             create_student()
         elif input_ == "b":
-            remove_student(find_student(int(input("student number: "))))
+            remove_student(int(input("student number: ")))
         elif input_ == "c":
             print_all_student()
         elif input_ == "d":
-            print_student(find_student(int(input("student number: "))))
+            print_student(all_students[(int(input("student number: ")))])
         elif input_ == "e":
-            edit_student(find_student(int(input("student number: "))))
-
-
-def find_student(num):
-    for stu in all_students:
-        if stu.stu_num == num:
-            return stu
+            edit_student(all_students[(int(input("student number: ")))])
 
 
 def edit_student(stu):
@@ -185,7 +179,7 @@ def edit_student(stu):
         if input_ == "":
             break
         elif input_ == "a":
-            stu.add_course(find_course(input("code: ").upper()))
+            stu.add_course(all_courses[(input("code: ").upper())])
 
 
 def create_student():
@@ -193,42 +187,37 @@ def create_student():
     first_name = input("first name: ")
     last_name = input("last name: ")
     stu_num = int(input("student number: "))
-    new_student = student(first_name, last_name, stu_num)
-    all_students.append(new_student)
+    if stu_num not in all_students.keys():
+        new_student = student(first_name, last_name, stu_num)
+        all_students[stu_num] = new_student
 
 
 def remove_student(stu):
-    all_students.remove(stu)
-    del stu
+    del all_students[stu]
 
 
 def print_all_student():
-    for stu in all_students:
+    for stu in all_students.values():
         print(stu.first, stu.last, stu.stu_num)
 
 
-def print_student(stu):    
+def print_student(stu):
     print(stu.first, stu.last, stu.stu_num)
-    for course in stu.course_list:
-        cou = find_course(course)
-        print(cou.name)
+    for code in stu.course_list:
+        cou = all_courses[code]
+        print(cou.name, stu.get_average(cou.code))
 
 
 def print_all_course():
-    for cou in all_courses:
+    for cou in all_courses.values():
         print(cou.name, cou.code, len(cou.students_list))
 
 
 def print_course(course):
-    print(course.name, course.code, course.period, course.teacher)
-    for stud in course.students_list:
-        stu = find_student(stud)
-        print(stu.first, stu.last, stu.stu_num)
-
-
-def print_menu():
-    print("Input 'a' to manage students\nInput 'b' to manage courses\n"
-          "Input 's' to save and exit")
+    print(course.name, course.code, course.period, course.teacher, course.class_average())
+    for num in course.students_list:
+        stu = all_students[num]
+        print(stu.first, stu.last, stu.stu_num, stu.get_average(course.code))
 
 
 def main():
@@ -237,7 +226,8 @@ def main():
                 all_students = pickle.load(input_)
                 all_courses = pickle.load(input_)
     while True:
-        print_menu()
+        print("Input 'a' to manage students\nInput 'b' to manage courses\n"
+              "Input 's' to save")
         input_ = input()
         if input_ == "a":
             student_menu()
@@ -247,12 +237,12 @@ def main():
             with open("markbooksave", "wb") as output:
                 pickle.dump(all_students, output, pickle.HIGHEST_PROTOCOL)
                 pickle.dump(all_courses, output, pickle.HIGHEST_PROTOCOL)
-            break
 
 
 if __name__ == "__main__":
     main()
 
+'''
 from typing import Dict
 
 
@@ -309,3 +299,4 @@ def edit_student(student: Dict, **kwargs: Dict):
             of a dictionary.
     """
     pass
+'''
