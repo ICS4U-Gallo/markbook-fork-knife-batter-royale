@@ -45,9 +45,9 @@ class course:  #class containing info related to the course
                         print(assignment.average_mark())
 
     def add_assignment(self):
-        ass_name = input("name: ")
-        ass_due = input("due: ")
-        ass_point = int(input("point: "))
+        ass_name = input("Name: ")
+        ass_due = input("Due: ")
+        ass_point = int(input("Points: "))
         self.assignment_list.append(assignment(ass_name, ass_due, 
                                     ass_point, self.code))
 
@@ -109,25 +109,25 @@ class assignment:  #class containing info about any assignments
 def course_menu():
     while True:
         print("Input nothing to go back\nInput 'a' to create a new course\nInput 'b' to edit existing courses\n"
-              "Input 'c' to print all courses\nInput 'd' to print a course in detail")
+              "Input 'c' to print all courses\nInput 'd' to print course details")
         input_ = input()
         if input_ == "":
             break
         elif input_ == "a":
             create_course()
         elif input_ == "b":
-            edit_course(find_course(input("code: ").upper()))
+            edit_course(find_course(input("Code: ").upper()))
         elif input_ == "c":
             print_all_course()
         elif input_ == "d":
-            print_course(find_course(input("code: ").upper()))
+            print_course(find_course(input("Code: ").upper()))
 
 
 def create_course():
-    name = input("course name: ")
-    code = input("course code: ").upper()
-    period = input("period: ")
-    teacher = input("teacher: ")
+    name = input("Course Name: ")
+    code = input("Course Code: ").upper()
+    period = input("Period: ")
+    teacher = input("Teacher: ")
     cou = course(name, code, period, teacher)
     all_courses.append(cou)
 
@@ -149,30 +149,30 @@ def edit_course(cou):
             elif input_ == "a":
                 cou.add_assignment()
             elif input_ == "b":
-                cou.add_student(find_student(int(input("student_num: "))))
+                cou.add_student(find_student(int(input("Student number: "))))
             elif input_ == "c":
-                cou.remove_student(find_student(int(input("student_num: "))))
+                cou.remove_student(find_student(int(input("Student number: "))))
             elif input_ == "d":
-                cou.edit_assignement(input("assignment name: ").capitalize())
+                cou.edit_assignement(input("Assignment Name: ").capitalize())
 
 
 def student_menu():
     while True:
         print("Input nothing to go back\nInput 'a' to add a student\nInput 'b' to remove students\nInput 'c' to show the student list\n"
-              "Input 'd' to show a student detail\nInput 'e' to edit a student")
+              "Input 'd' to show student details\nInput 'e' to edit a student")
         input_ = input()
         if input_ == "":
             break
         elif input_ == "a":
             create_student()
         elif input_ == "b":
-            remove_student(find_student(int(input("student number: "))))
+            remove_student(find_student(int(input("Student Number: "))))
         elif input_ == "c":
             print_all_student()
         elif input_ == "d":
-            print_student(find_student(int(input("student number: "))))
+            print_student(find_student(int(input("Student Number: "))))
         elif input_ == "e":
-            edit_student(find_student(int(input("student number: "))))
+            edit_student(find_student(int(input("Student Number: "))))
 
 
 def find_student(num):
@@ -230,7 +230,7 @@ def print_course(course):
 
 
 def print_menu():
-    print("Input 'a' to manage students\nInput 'b' to manage courses\n"
+    print("Markbook Home Page\nInput 'a' to manage students\nInput 'b' to manage courses\n"
           "Input 's' to save and exit")
 
 
