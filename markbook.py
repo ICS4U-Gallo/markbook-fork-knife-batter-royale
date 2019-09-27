@@ -10,7 +10,7 @@ all_courses = {}
 all_students = {}
 
 
-class course:  #class containing info related to the course
+class course:  
     def __init__(self, name, code, period, teacher):
         self.name = name
         self.code = code
@@ -48,7 +48,7 @@ class course:  #class containing info related to the course
     def add_assignment(self):
         ass_name = input("Name: ")
         ass_due = input("Due: ")
-        ass_point = int(input("Points: "))
+        ass_point = convert_int(input("Points: "))
         self.assignment_list.append(assignment(ass_name, ass_due, 
                                     ass_point, self.code))
 
@@ -60,7 +60,7 @@ class course:  #class containing info related to the course
         return average
 
 
-class student:  #class containing info about the student
+class student:
     def __init__(self, first_name, last_name, stu_num):
         self.first = first_name
         self.last = last_name
@@ -92,10 +92,10 @@ class assignment:  #class containing info about any assignments
         self.marks = {}
 
     def mark_stu(self):
-        stu = all_students[(int(input("student number: ")))]
+        stu = all_students[(convert_int(input("student number: ")))]
         cou = all_courses[self.course]
         if stu.stu_num in cou.students_list:
-            marks = int(input("marks: "))
+            marks = convert_int(input("marks: "))
             self.marks[stu.stu_num] = marks
 
     def print_mark(self):
@@ -111,6 +111,26 @@ class assignment:  #class containing info about any assignments
         return average
 
 
+def convert_int(num_true):
+    try:
+        val = int(num_true)
+    except ValueError:
+        val = convert_int(input("Not a num, enter a number: "))
+        return val
+    else:
+        return val
+
+
+def get_value(dict, key):
+    try:
+        value = dict[key]
+    except KeyError:
+        value = get_value(dict, input("Value doesn't exist: "))
+        return value
+    else:
+        return value
+
+
 def course_menu():
     while True:
         print("Input nothing to go back\nInput 'a' to create a new course\nInput 'b' to edit existing courses\n"
@@ -121,7 +141,7 @@ def course_menu():
         elif input_ == "a":
             create_course()
         elif input_ == "b":
-            edit_course(all_courses[(input("code: ").upper())])
+            edit_course(get_value(all_courses, (input("code: ").upper())))
         elif input_ == "c":
             print_all_course()
         elif input_ == "d":
@@ -139,20 +159,21 @@ def create_course():
 
 
 def edit_course(cou):
-    while True:
-        print("Input nothing to go back\nInput 'a' to add assignment \nInput 'b' to add student \n"
-                  "Input 'c' to remove student \nInput 'd' to edit assignment")
-        input_ = input()
-        if input_ == "":
-            break
-        elif input_ == "a":
-            cou.add_assignment()
-        elif input_ == "b":
-            cou.add_student(all_students[(int(input("student_num: ")))])
-        elif input_ == "c":
-            cou.remove_student(all_students[(int(input("student_num: ")))])
-        elif input_ == "d":
-            cou.edit_assignement(input("assignment name: ").capitalize())
+    if type(cou) == class:
+        while True:
+            print("Input nothing to go back\nInput 'a' to add assignment \nInput 'b' to add student \n"
+                "Input 'c' to remove student \nInput 'd' to edit assignment")
+            input_ = input()
+            if input_ == "":
+                break
+            elif input_ == "a":
+                cou.add_assignment()
+            elif input_ == "b":
+                cou.add_student(get_value(all_students, (convert_int(input("student_num: ")))))
+            elif input_ == "c":
+                cou.remove_student(all_students[(convert_int(input("student_num: ")))])
+            elif input_ == "d":
+                cou.edit_assignement(input("assignment name: ").capitalize())
 
 
 def student_menu():
@@ -188,8 +209,8 @@ def create_student():
     print("Creating new student")
     first_name = input("first name: ")
     last_name = input("last name: ")
-    stu_num = int(input("student number: "))
-    if stu_num not in all_students.keys():
+    stu_num = convert_int(input("student number: "))
+    if stu_num not in all_students.keys() and type(stu_num) == int:
         new_student = student(first_name, last_name, stu_num)
         all_students[stu_num] = new_student
 
