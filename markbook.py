@@ -173,7 +173,7 @@ def edit_course(cou):
             elif input_ == "c":
                 cou.remove_student(all_students[(convert_int(input("student_num: ")))])
             elif input_ == "d":
-                cou.edit_assignement(input("assignment name: ").capitalize())
+                cou.edit_assignement(input("assignment name: ").upper())
 
 
 def student_menu():
