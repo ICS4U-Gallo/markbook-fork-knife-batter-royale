@@ -10,7 +10,7 @@ all_courses = {}
 all_students = {}
 
 
-class course:  
+class course:
     def __init__(self, name, code, period, teacher):
         self.name = name
         self.code = code
@@ -35,6 +35,10 @@ class course:
         for assignment in self.assignment_list:
             if assignment.name == ass_name:
                 while True:
+                    print("Input nothing to go back\n
+                          "Input 'a' to enter a student mark\n"
+                          "Input 'b' to print all marks"
+                          "Input 'c' to print average mark")
                     input_ = input()
                     if input_ == "":
                         break
@@ -49,7 +53,7 @@ class course:
         ass_name = input("Name: ")
         ass_due = input("Due: ")
         ass_point = convert_int(input("Points: "))
-        self.assignment_list.append(assignment(ass_name, ass_due, 
+        self.assignment_list.append(assignment(ass_name, ass_due,
                                     ass_point, self.code))
 
     def class_average(self):
@@ -83,7 +87,7 @@ class student:
         return average
 
 
-class assignment:  #class containing info about any assignments
+class assignment:
     def __init__(self, name, due, point, course):
         self.name = name.upper()
         self.due = due
@@ -92,7 +96,7 @@ class assignment:  #class containing info about any assignments
         self.marks = {}
 
     def mark_stu(self):
-        stu = all_students[(convert_int(input("student number: ")))]
+        stu = get_value(all_students, (convert_int(input("student number: "))))
         cou = all_courses[self.course]
         if stu.stu_num in cou.students_list:
             marks = convert_int(input("marks: "))
@@ -125,27 +129,28 @@ def get_value(dict, key):
     try:
         value = dict[key]
     except KeyError:
-        value = get_value(dict, input("Value doesn't exist: "))
-        return value
+        print(f"Error 404, {key} not found")
     else:
         return value
 
 
 def course_menu():
     while True:
-        print("Input nothing to go back\nInput 'a' to create a new course\nInput 'b' to edit existing courses\n"
-              "Input 'c' to print all courses\nInput 'd' to print course details")
+        print("Input nothing to go back\nInput 'a' to create a new course\n"
+              "Input 'b' to edit existing courses\n"
+              "Input 'c' to print all courses\n"
+              "Input 'd' to print course details")
         input_ = input()
         if input_ == "":
             break
         elif input_ == "a":
             create_course()
         elif input_ == "b":
-            edit_course(get_value(all_courses, (input("code: ").upper())))
+            edit_course(get_value(all_courses, input("code: ").upper()))
         elif input_ == "c":
             print_all_course()
         elif input_ == "d":
-            print_course(all_courses[(input("code: ").upper())])
+            print_course(get_value(all_courses, input("code: ").upper()))
 
 
 def create_course():
@@ -159,26 +164,31 @@ def create_course():
 
 
 def edit_course(cou):
-    if type(cou) == class:
+    if isinstance(cou, course):
         while True:
-            print("Input nothing to go back\nInput 'a' to add assignment \nInput 'b' to add student \n"
-                "Input 'c' to remove student \nInput 'd' to edit assignment")
+            print("Input nothing to go back\nInput 'a' to add assignment \n"
+                  "Input 'b' to add student \n"
+                  "Input 'c' to remove student \nInput 'd' to edit assignment")
             input_ = input()
             if input_ == "":
                 break
             elif input_ == "a":
                 cou.add_assignment()
             elif input_ == "b":
-                cou.add_student(get_value(all_students, (convert_int(input("student_num: ")))))
+                cou.add_student(get_value(all_students, (convert_int(input(
+                    "student_num: ")))))
             elif input_ == "c":
-                cou.remove_student(all_students[(convert_int(input("student_num: ")))])
+                cou.remove_student(all_students[(convert_int(input(
+                    "student_num: ")))])
             elif input_ == "d":
                 cou.edit_assignement(input("assignment name: ").upper())
 
 
 def student_menu():
     while True:
-        print("Input nothing to go back\nInput 'a' to add a student\nInput 'b' to remove students\nInput 'c' to show the student list\n"
+        print("Input nothing to go back\nInput 'a' to add a student\n"
+              "Input 'b' to remove students\n"
+              "Input 'c' to show the student list\n"
               "Input 'd' to show student details\nInput 'e' to edit a student")
         input_ = input()
         if input_ == "":
@@ -186,23 +196,26 @@ def student_menu():
         elif input_ == "a":
             create_student()
         elif input_ == "b":
-            remove_student(int(input("student number: ")))
+            remove_student(convert_int(input("student number: ")))
         elif input_ == "c":
             print_all_student()
         elif input_ == "d":
-            print_student(all_students[(int(input("student number: ")))])
+            print_student(get_value(all_students, convert_int(input(
+                "student number: "))))
         elif input_ == "e":
-            edit_student(all_students[(int(input("student number: ")))])
+            edit_student(get_value(all_students, (convert_int(input(
+                "student number: ")))))
 
 
 def edit_student(stu):
-    while True:
-        print("Input nothing to go back \nInput 'a' to add course")
-        input_ = input()
-        if input_ == "":
-            break
-        elif input_ == "a":
-            stu.add_course(all_courses[(input("code: ").upper())])
+    if isinstance(stu, student):
+        while True:
+            print("Input nothing to go back \nInput 'a' to add course")
+            input_ = input()
+            if input_ == "":
+                break
+            elif input_ == "a":
+                stu.add_course(all_courses[(input("code: ").upper())])
 
 
 def create_student():
@@ -216,7 +229,8 @@ def create_student():
 
 
 def remove_student(stu):
-    del all_students[stu]
+    if stu in all_students.keys():
+        del all_students[stu]
 
 
 def print_all_student():
@@ -225,10 +239,11 @@ def print_all_student():
 
 
 def print_student(stu):
-    print(stu.first, stu.last, stu.stu_num)
-    for code in stu.course_list:
-        cou = all_courses[code]
-        print(cou.name, stu.get_average(cou.code))
+    if isinstance(stu, student):
+        print(stu.first, stu.last, stu.stu_num)
+        for code in stu.course_list:
+            cou = all_courses[code]
+            print(cou.name, stu.get_average(cou.code))
 
 
 def print_all_course():
@@ -236,11 +251,13 @@ def print_all_course():
         print(cou.name, cou.code, len(cou.students_list))
 
 
-def print_course(course):
-    print(course.name, course.code, course.period, course.teacher, course.class_average())
-    for num in course.students_list:
-        stu = all_students[num]
-        print(stu.first, stu.last, stu.stu_num, stu.get_average(course.code))
+def print_course(cou):
+    if isinstance(cou, course):
+        print(cou.name, cou.code, cou.period, cou.teacher,
+              cou.class_average())
+        for num in cou.students_list:
+            stu = all_students[num]
+            print(stu.first, stu.last, stu.stu_num, stu.get_average(cou.code))
 
 
 def main():
