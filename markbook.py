@@ -35,7 +35,7 @@ class course:
         for assignment in self.assignment_list:
             if assignment.name == ass_name:
                 while True:
-                    print("Input nothing to go back\n
+                    print("Input nothing to go back\n"
                           "Input 'a' to enter a student mark\n"
                           "Input 'b' to print all marks"
                           "Input 'c' to print average mark")
@@ -75,6 +75,11 @@ class student:
         if new_course.code not in self.course_list:
             self.course_list.append(new_course.code)
             new_course.students_list.append(self.stu_num)
+
+    def rm_course(self, old_course):
+        if old_course.code in self.course_list:
+            self.course_list.remove(old_course.code)
+            old_course.students_list.remove(self.stu_num)
 
     def get_average(self, code):
         mark = 0
@@ -129,7 +134,7 @@ def get_value(dict, key):
     try:
         value = dict[key]
     except KeyError:
-        print(f"Error 404, {key} not found")
+        print(f"Error 404, key {key} not found")
     else:
         return value
 
@@ -215,7 +220,9 @@ def edit_student(stu):
             if input_ == "":
                 break
             elif input_ == "a":
-                stu.add_course(all_courses[(input("code: ").upper())])
+                stu.add_course(get_value(all_courses, input("code: ").upper()))
+            elif input_ == "b":
+                stu.rm_course(get_value(all_course, input("code: ").upper()))
 
 
 def create_student():
