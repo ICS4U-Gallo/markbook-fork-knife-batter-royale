@@ -85,7 +85,7 @@ class student:
 
 class assignment:  #class containing info about any assignments
     def __init__(self, name, due, point, course):
-        self.name = name.capitalize()
+        self.name = name.upper()
         self.due = due
         self.point = point
         self.course = course
