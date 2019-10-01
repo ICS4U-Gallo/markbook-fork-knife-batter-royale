@@ -1,4 +1,4 @@
-markbook.py for half complete GUI version
+markbook.py for half complete GUI version  
 original_markbook.py for text version
 
 # Markbook Assignment
